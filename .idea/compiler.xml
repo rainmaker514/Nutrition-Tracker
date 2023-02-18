@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="Nutrition-Tracker-Contact-Service" />
+        <module name="Nutrition-Tracker-User-Service" />
+        <module name="Nutrition-Tracker-Entry-Service" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Nutrition-Tracker-Contact-Service" target="17" />
+      <module name="Nutrition-Tracker-Entry-Service" target="17" />
+      <module name="Nutrition-Tracker-User-Service" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Nutrition-Tracker-Contact-Service" options="-parameters" />
+      <module name="Nutrition-Tracker-Entry-Service" options="-parameters" />
+      <module name="Nutrition-Tracker-User-Service" options="-parameters" />
+    </option>
+  </component>
+</project>
