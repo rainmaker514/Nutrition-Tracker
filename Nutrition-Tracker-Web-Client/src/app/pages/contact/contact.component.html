@@ -1,1 +1,39 @@
-<p>contact works!</p>
+<section class="hero is-primary is-bold">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">Contact Us!</h1>
+      </div>
+    </div>
+  </section>
+  
+  <section style="background-color: rgb(47, 47, 47);" class="section">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-5">
+      <!--contact form-->
+      <form #addForm="ngForm" (ngSubmit)="onAddContact(addForm)">
+        <div class="field">
+          <label class="label">Name</label>
+          <input type="text" name="name" class="input" ngModel id="name" required>
+        </div>
+  
+        <div class="field">
+          <label class="label">Email</label>
+          <input type="text" name="email" class="input" ngModel id="email" required>
+        </div>
+  
+        <div class="field">
+          <label class="label">Your Message</label>
+          <textarea name="message" class="textarea" ngModel id="message" required></textarea>
+        </div>
+  
+        <button type="submit" class="button is-medium is-primary" [disabled]="addForm.invalid" id="add-contact-form">
+          Send
+        </button>
+      </form>
+        </div>
+        </div>
+
+    </div>
+  </section>
+  
