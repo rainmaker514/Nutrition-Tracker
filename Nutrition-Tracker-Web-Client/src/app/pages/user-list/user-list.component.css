@@ -1,0 +1,57 @@
+.hero{
+    background-image: url('/assets/img/bg6.jpg') !important;
+    background-size: cover;
+    background-position: center center;
+}
+
+#user-list {
+    top: 100px;
+    left: 100px;
+    position: relative;
+  }
+
+  
+
+ tbody:nth-child(even):hover, tbody:nth-child(odd):hover{
+    background: #00d1b2;
+    color:white;
+    cursor: pointer;
+}
+
+#dropdown-item{
+    font-size: 16px;
+}
+
+#addUser{
+    transition: 0.4s;
+}
+
+#addUser:hover{
+    background-color: hsl(171, 100%, 26%);
+}
+
+#deleteUser, #editUser{
+    background-color: rgb(47, 47, 47);
+    transition: 0.4s;
+}
+
+#editUser:hover, #deleteUser:hover{
+    background-color: whitesmoke
+}
+
+#save{
+    transition: 0.4s;
+}
+
+#save:hover{
+    background-color: hsl(171, 100%, 26%);
+}
+
+#addUserClose{
+    transition: 0.4s;
+}
+
+#addUserClose:hover{
+    background-color: rgb(197, 195, 195);
+}
+
