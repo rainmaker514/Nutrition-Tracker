@@ -1,0 +1,82 @@
+.hero{
+    background-image: url('/assets/img/bg7.jpg') !important;
+    background-size: cover;
+    background-position: center center;
+}
+
+#info {
+    top: 100px;
+    left: 100px;
+    position: relative;
+}
+
+p, label, h1{
+    color: whitesmoke;
+}
+
+span{
+    font-size: large;
+    color: whitesmoke;
+}
+.modal-card{
+    width: 400px
+}
+
+#addNewEntry{
+    float: right;
+}
+
+#entries{
+    display: inline;
+}
+
+#progress-tab, #food-tab, #notes-tab {
+    background-color: rgb(47, 47, 47);
+    transition: 0.4s;
+}
+
+#progress-tab:hover, #food-tab:hover, #notes-tab:hover, header{
+    background-color: hsl(171, 100%, 41%);
+}
+
+fa-icon{
+    color: hsl(171, 100%, 41%);
+}
+
+li:hover span fa-icon{
+    color: whitesmoke;
+}
+
+#new-entry-btn{
+    transition: 0.4s;
+    position: relative;
+    bottom: 360px;
+    left: 625px
+}
+
+#new-entry-btn:hover{
+    background-color: hsl(171, 100%, 26%);
+}
+
+section, footer, .input{
+    background-color: rgb(47, 47, 47)
+}
+
+.field{
+    position: relative;
+    left: 10px
+}
+
+#date{
+    position: relative;
+    bottom: 5px;
+}
+
+
+
+
+
+
+
+
+

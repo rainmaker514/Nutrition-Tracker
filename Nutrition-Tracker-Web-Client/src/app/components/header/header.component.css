@@ -1,0 +1,25 @@
+a{
+    color: whitesmoke;
+}
+
+.navbar-link{
+    transition: 0.4s;
+}
+
+.navbar-item{
+    transition: 0.4s;
+}
+
+.navbar-dropdown .navbar-item:hover{
+    background-color: hsl(171, 100%, 41%);
+    color: whitesmoke;
+}
+
+.navbar-dropdown .navbar-item:focus{
+    background-color: hsl(171, 100%, 41%);
+    color: whitesmoke;
+}
+
+.navbar-dropdown{
+    background-color: rgb(47, 47, 47);
+}

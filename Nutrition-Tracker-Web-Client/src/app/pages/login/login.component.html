@@ -1,0 +1,84 @@
+
+<div class="hero is-fullheight">
+    <h1 id="login" style="color: whitesmoke;" class="title is-1">Log In</h1>
+    <div class="hero-body">
+      
+      <div class="container">
+        
+        <div class="columns is-centered">
+          <div class="column is-4">
+            <form class="box" style="background-color: rgb(47, 47, 47);" #loginForm="ngForm" (ngSubmit)="onLogin(loginForm.value)">
+              <div class="field">
+                <label class="label">Email</label>
+                <div class="control has-icons-left">
+                  <input class="input is-rounded" type="email" name="email" placeholder="Email" ngModel #emailInput="ngModel" required>
+                  <span class="help is-error" *ngIf="emailInput.invalid && emailInput.touched">Email required</span>
+                  <span class="icon is-small is-left">
+                    <fa-icon [icon]="faEnvelope"></fa-icon>
+                  </span>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Password</label>
+                <div class="control has-icons-left">
+                  <input class="input is-rounded" type="password" name="password" placeholder="Password" ngModel #passwordInput="ngModel" required>
+                  <span class="help is-error" *ngIf="passwordInput.invalid && passwordInput.touched">Password required</span>
+                  <span class="icon is-small is-left">
+                    <fa-icon [icon]="faLock"></fa-icon>
+                  </span>
+                </div>
+              </div>
+              <div class="field">
+                <button type="submit" style="position: relative; top: 5px;" class="button is-small is-primary" [disabled]="loginForm.invalid">Log In</button>
+              </div>
+              <div class="field">
+                <a onclick="resetPasswordModal.classList.toggle('is-active')" id="reset">Reset Password</a>
+                <a routerLink="/signup" id="signup" style="float: right">Sign Up</a>
+                <span style="float: right;">Don't have an account?&nbsp;&nbsp;</span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!--reset password modal-->
+  <div class="modal animate__animated animate__fadeIn" id="resetPasswordModal">
+    <div class="modal-background" onclick="resetPasswordModal.classList.toggle('is-active')"></div>
+    <div class="modal-card">
+        <header style="background-color: hsl(171, 100%, 41%);" class="modal-card-head">
+            <p style="color: whitesmoke;" class="modal-card-title">Reset Password</p>
+            <button class="delete" aria-label="close" id="close" onclick="resetPasswordModal.classList.toggle('is-active')"></button>
+        </header>
+        <section style="background-color: rgb(47, 47, 47);" class="modal-card-body">
+             <form #resetPasswordForm="ngForm" (ngSubmit)="onResetPassword(resetPasswordForm)">
+                <div class="field">
+                    <label style="color: whitesmoke;" class="label">Email</label>
+                    <input class="input is-rounded"  type="email" name="email" required ngModel>
+                </div>
+                <button type="submit" style="display: none;" id="reset-btn"></button>
+             </form>
+            
+        </section>
+        <footer style="background-color: rgb(47, 47, 47);" class="modal-card-foot">
+    
+                    <button [disabled]="resetPasswordForm.invalid || showLoading" onclick="document.getElementById('reset-btn').click()" class="button is-primary">
+                        <span *ngIf="showLoading">Please wait...</span>
+                        <span *ngIf="!showLoading">Reset</span>
+                    </button>
+                    <button onclick="resetPasswordModal.classList.toggle('is-active')" id="close-btn" class="button">Close</button>
+                
+        </footer>
+    </div>
+  </div>
+  
+            
+            
+    
+        
+    
+    
+    
+    
+    

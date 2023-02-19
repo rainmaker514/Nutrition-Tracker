@@ -1,0 +1,59 @@
+<div class="hero is-fullheight">
+    <div class="hero-body">
+      <div class="container">
+        <h1 id="id" style="color: white;" class="title is-1">Sign Up</h1>
+        <div class="columns is-centered">
+          <div class="column is-4">
+            <form class="box" style="background-color: rgb(47, 47, 47);" #signUpForm="ngForm" (ngSubmit)="onSignUp(signUpForm.value)">
+              <div class="field">
+                <label class="label">Firstname</label>
+                <div class="control has-icons-left">
+                  <input class="input is-rounded" type="text" name="firstname" placeholder="e.g. John" #firstnameInput="ngModel" ngModel required>
+                  <span style="color:red;"class="help is-error" *ngIf="firstnameInput.invalid && firstnameInput.touched">Firstname required</span>
+                  <span class="icon is-small is-left">
+                    <fa-icon [icon]="faUser"></fa-icon>
+                  </span>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Lastname</label>
+                <div class="control has-icons-left">
+                  <input class="input is-rounded" type="text" name="lastname" placeholder="e.g. Smith" ngModel #lastnameInput="ngModel" required>
+                  <span style="color:red;" class="help is-error" *ngIf="lastnameInput.invalid && lastnameInput.touched">Lastname required</span>
+                  <span class="icon is-small is-left">
+                    <fa-icon [icon]="faUser"></fa-icon>
+                  </span>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Email</label>
+                <div class="control has-icons-left">
+                  <input class="input is-rounded" type="email" name="email" placeholder="e.g. johnsmith@email.com" #emailInput="ngModel" ngModel required>
+                  <span style="color:red;" class="help is-error" *ngIf="emailInput.invalid && emailInput.touched">Email required</span>
+                  <span class="icon is-small is-left">
+                    <fa-icon [icon]="faEnvelope"></fa-icon>
+                  </span>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Password</label>
+                <div class="control has-icons-left">
+                  <input class="input is-rounded" type="password" name="password" #passwordInput="ngModel" ngModel required>
+                  <span style="color:red;" class="help is-error" *ngIf="passwordInput.invalid && passwordInput.touched">Password required</span>
+                  <span class="icon is-small is-left">
+                    <fa-icon [icon]="faLock"></fa-icon>
+                  </span>
+                </div>
+              </div>
+              
+              <div class="field">
+                <button type="submit" id="add-user-form" class="button is-small is-primary" [disabled]="signUpForm.invalid">Sign Up</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  

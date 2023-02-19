@@ -1,0 +1,43 @@
+.hero{
+    background-image: url('/assets/img/bg2.jpg') !important;
+    background-size: cover;
+    background-position: center center;
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+  }
+  
+  .container{
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+  }
+
+  #signup {
+    top: 100px;
+    left: 100px;
+    position: relative;
+  }
+  
+  .label{
+    color: whitesmoke;
+  }
+
+  .button{
+    transition: 0.4s;
+  }
+
+  .button:hover{
+    background-color: hsl(171, 100%, 26%);
+  }
+  
+  
+  
+  
+  
