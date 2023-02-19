@@ -1,1 +1,195 @@
-<p>user works!</p>
+
+<div class="hero is-fullheight">
+    <h1 id="profile" style="color: whitesmoke;" class="title is-1">Profile</h1>
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-7">
+                    <form style="background-color: rgb(47, 47, 47);" class="box" #updateForm="ngForm">
+                        <div class="field">
+                            <div class="field-body">
+                                <div class="column">
+                                    <div class="field">
+                                        <label class="label">Firstname</label>
+                                        <div class="control has-icons-left">
+                                            <input style="color:whitesmoke" class="input is-rounded is-primary" type="text" name="firstname" [(ngModel)]="user.firstname" required>
+                                                <span class="icon is-small is-left">
+                                                    <fa-icon [icon]="faUser"></fa-icon>
+                                                </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <div class="field">
+                                        <label class="label">Lastname</label>
+                                        <div class="control has-icons-left">
+                                            <input style="color:whitesmoke" class="input is-rounded is-primary" type="text" name="lastname" [(ngModel)]="user.lastname" required>
+                                                <span class="icon is-small is-left">
+                                                    <fa-icon [icon]="faUser"></fa-icon>
+                                                </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="field-body">
+                                <div class="column">
+                                    <div class="field">
+                                        <label class="label">Email</label>
+                                        <div class="control has-icons-left">
+                                            <input style="color:whitesmoke" class="input is-rounded is-primary" size="9" type="email" name="email" [(ngModel)]="user.email" required>
+                                                <span class="icon is-small is-left">
+                                                    <fa-icon [icon]="faEnvelope"></fa-icon>
+                                                </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <div class="field">
+                                        <label class="label">Height</label>
+                                        <div class="control has-icons-left">
+                                            <div class="select is-rounded is-primary">
+                                                <select style="background-color: rgb(47, 47, 47); color:whitesmoke" name="height" [(ngModel)]="user.height">
+                                                    <option class="dropdown-item" selected value="">{{user.height}}</option>
+                                                    <option [hidden]="user.height === height" *ngFor="let height of heightDropDown" [ngValue]="height">{{height}}</option>
+                                                </select>
+                                            </div>
+                                            <span class="icon is-small is-left">
+                                                <fa-icon [icon]="faRuler"></fa-icon>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="field-body">
+                                <div class="column">
+                                    <div class="field">
+                                    <label class="label">Weight</label>
+                                        <div class="field has-addons">
+                                            <div class="control has-icons-left">
+                                                <input style="color:whitesmoke" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="3" class="input is-rounded is-primary" type="number" name="weight" [(ngModel)]="user.weight"> 
+                                                    <span class="icon is-small is-left">
+                                                        <fa-icon [icon]="faWeight"></fa-icon>
+                                                    </span>
+                                            </div>
+                                        <p class="control">
+                                            <a style="background-color: rgb(47, 47, 47); color:whitesmoke" class="button is-static">lbs</a>
+                                        </p>
+                                        </div>  
+                                    </div>
+                                </div>
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Age</label>
+                                    <div class="control has-icons-left">
+                                        <input style="color:whitesmoke" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="2" class="input is-rounded is-primary" type="number" name="age" [(ngModel)]="user.age">
+                                            <span class="icon is-small is-left">
+                                                <fa-icon [icon]="faHourglass"></fa-icon>
+                                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="field">
+                            <div class="field-body">
+                                <div class="column">
+                                    <div class="field">
+                                        <label class="label">Activity Level</label>
+                                        <div class="control has-icons-left">
+                                            <div class="select is-rounded is-primary">
+                                                <select style="background-color: rgb(47, 47, 47); color:whitesmoke" name="activityLevel" [(ngModel)]="user.activityLevel">
+                                                    <option class="dropdown-item" selected value="">{{user.activityLevel}}</option>
+                                                    <option [hidden]="user.activityLevel === 'Sedentary'" value="Sedentary">Sedentary</option>
+                                                    <option [hidden]="user.activityLevel === 'Light'" value="Light">Light</option>
+                                                    <option [hidden]="user.activityLevel === 'Moderate'" value="Moderate">Moderate</option>
+                                                    <option [hidden]="user.activityLevel === 'Heavy'" value="Heavy">Heavy</option>
+                                                </select>
+                                            </div>
+                                            <div class="icon is-small is-left">
+                                                <fa-icon [icon]="faDumbbell"></fa-icon>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Goal</label>
+                                        <div class="control has-icons-left">
+                                            <div class="select is-rounded is-primary">
+                                                <select style="background-color: rgb(47, 47, 47); color:whitesmoke" name="goal"[(ngModel)]="user.goal">
+                                                    <option class="dropdown-item" selected value="">{{user.goal}}</option>
+                                                    <option [hidden]="user.goal === 'Lose weight'" value="Lose weight">Lose weight</option>
+                                                    <option [hidden]="user.goal === 'Maintain weight'" value="Maintain weight">Maintain weight</option>
+                                                    <option [hidden]="user.goal === 'Gain weight'" value="Gain weight">Gain weight</option>
+                                                </select>
+                                            </div>
+                                            <div class="icon is-small is-left">
+                                                <fa-icon [icon]="faClipboard"></fa-icon>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="field">
+                            <div class="field-body">
+                                <div class="field">
+                                    <button (click)="onUpdateUser()" class="button is-primary" style="margin-top: 10px;">Save Changes</button>
+                                    <a id="change-pass-link" onclick="changePasswordModal.classList.toggle('is-active')">Change Password</a>
+                                </div>
+                            </div>
+                        </div>    
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--change password modal-->
+<div class="modal animate__animated animate__fadeIn" id="changePasswordModal">
+    <div class="modal-background" onclick="changePasswordModal.classList.toggle('is-active')"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Change Password</p>
+            <button class="delete" aria-label="close" id="close" onclick="changePasswordModal.classList.toggle('is-active')"></button>
+        </header>
+        <section class="modal-card-body">
+             <form #changePasswordForm="ngForm" (ngSubmit)="onChangePassword(changePasswordForm)">
+                <div class="field">
+                    <label class="label">Email</label>
+                    <input class="input is-rounded"  type="email" name="email" required ngModel>
+                    <label class="label">New Password</label>
+                    <input class="input is-rounded"  type="password" name="newPassword" required ngModel>
+                </div>
+                <button type="submit" style="display: none;" id="chn-btn"></button>
+             </form>
+            
+        </section>
+        <footer class="modal-card-foot">
+    
+                    <button [disabled]="changePasswordForm.invalid || showLoading" onclick="document.getElementById('chn-btn').click()" class="button is-primary">
+                        <span *ngIf="showLoading">Please wait...</span>
+                        <span *ngIf="!showLoading">Change</span>
+                    </button>
+                    <button onclick="changePasswordModal.classList.toggle('is-active')" id="close-btn" class="button">Close</button>
+                
+        </footer>
+    </div>
+</div>
+    
+  
+  
+            
+            
+    
+        
+    
+    
+    
+    
+    

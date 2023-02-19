@@ -1,0 +1,48 @@
+.hero{
+    background-image: url('/assets/img/bg5.jpg') !important;
+    background-size: cover;
+    background-position: center center;
+}
+
+#profile {
+    top: 100px;
+    left: 100px;
+    position: relative;
+  }
+
+  .label, p{
+    color: whitesmoke;
+  }
+
+  #change-pass-link{
+    color: hsl(171, 100%, 41%);
+    transition: 0.4s;
+    position: relative;
+    left: 20px;
+    top: 17px;
+  }
+
+  #change-pass-link:hover{
+    color: hsl(171, 100%, 26%);
+    text-decoration: underline;
+  }
+
+  .button{
+    transition: 0.4s;
+  }
+
+  .button:hover{
+    background-color: hsl(171, 100%, 26%);
+  }
+
+  .input{
+    background-color: rgb(47, 47, 47);
+  }
+
+  header{
+    background-color: hsl(171, 100%, 41%);
+  }
+
+  section, footer{
+    background-color: rgb(47, 47, 47);
+  }
