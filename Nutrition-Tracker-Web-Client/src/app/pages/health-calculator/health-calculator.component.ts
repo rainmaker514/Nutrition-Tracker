@@ -1,10 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-health-calculator',
+  selector: 'app-pages-health-calculator',
   templateUrl: './health-calculator.component.html',
   styleUrls: ['./health-calculator.component.css']
 })
-export class HealthCalculatorComponent {
+export class HealthCalculatorComponent implements OnInit {
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
 
 }
