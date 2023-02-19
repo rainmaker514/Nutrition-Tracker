@@ -1,0 +1,13 @@
+.hero{
+    background-image: url('/assets/img/bg3.jpg') !important;
+    background-size: cover;
+    background-position: center center;
+  }
+
+  .box{
+    background-color: rgb(47, 47, 47);
+  }
+  
+  p{
+    color: whitesmoke;
+  }
