@@ -1,1 +1,164 @@
-<p>info works!</p>
+
+<div class="hero is-fullheight">
+    <h1 id="info" style="color: whitesmoke" class="title is-1">My Info</h1>
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-7">
+                    <div class="box" style="background-color: rgb(47, 47, 47);">
+                        <div class="tabs is-centered is-boxed" style="background-color: rgb(47, 47, 47);">
+                            <ul>
+                                <li class="is-active" id="my-progress" (click)="onTabChange('my-progress')">
+                                    <a id="progress-tab">
+                                        <span class="icon is-small"><fa-icon id="tasks" [icon]="faTasks"></fa-icon></span>
+                                        <span>My Progress</span>
+                                    </a>
+                                </li>
+                                <li id="my-food" (click)="onTabChange('my-food')">
+                                    <a id="food-tab">
+                                        <span class="icon is-small"><fa-icon [icon]="faHamburger"></fa-icon></span>
+                                        <span>My Food</span>
+                                    </a>
+                                </li>
+                                <li id="my-notes" (click)="onTabChange('my-notes')">
+                                    <a id="notes-tab">
+                                        <span class="icon is-small"><fa-icon [icon]="faStickyNote"></fa-icon></span>
+                                        <span>My Notes</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="content">
+                            <!--My Progress tab-->
+                            <div class="content-value" *ngIf="tabId === 'my-progress'">
+                                <h1 id="entries" class="title has-text-left is-6">Entries:</h1>
+                                
+                                <h1 *ngIf="user?.startingWeight === undefined; else start" class="title has-text-centered">0 lbs</h1> 
+                                <ng-template #start>
+                                    <h1 class="title has-text-centered">
+                                        {{user?.startingWeight}} lbs
+                                    </h1>
+                                </ng-template>
+                                <p align="center">
+                                    <a onclick="startingWeightModal.classList.toggle('is-active')">Change</a>
+                                </p>
+                                <h1 class="title has-text-centered is-6">Current Weight:</h1>
+                                <h1 class="title has-text-centered">{{user?.weight}} lbs </h1> 
+                                <p align="center">
+                                    <a onclick="currentWeightModal.classList.toggle('is-active')">Change</a>
+                                </p>
+                                <button type="button" id="new-entry-btn" onclick="createNewEntryModal.classList.toggle('is-active')" class="button is-small is-primary"><fa-icon style="color: whitesmoke;" [icon]="faPlus"></fa-icon>&nbsp;New Entry</button>
+                            </div>
+                            <div class="content-value" *ngIf="tabId === 'my-food'">
+                                <p>my food</p>
+                            </div>
+                            <div class="content-value" *ngIf="tabId === 'my-notes'">
+                                <p>my notes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--starting weight modal-->
+<div class="modal animate__animated animate__fadeIn" id="startingWeightModal">
+    <div class="modal-background" onclick="startingWeightModal.classList.toggle('is-active')"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Change Starting Weight</p>
+            <button class="delete" aria-label="close" id="close" onclick="startingWeightModal.classList.toggle('is-active')"></button>
+        </header>
+        <section class="modal-card-body">
+             <form #changeStartingWeightForm="ngForm" (ngSubmit)="onChangeStartingWeight(changeStartingWeightForm)">
+                <div class="field">
+                    <label class="label">Starting Weight:</label>
+                    <input class="input is-rounded"  type="number" name="startingWeight" required ngModel>
+                </div>
+                <button type="submit" style="display: none;" id="chn-btn"></button>
+             </form>
+            
+        </section>
+        <footer class="modal-card-foot">
+    
+                    <button [disabled]="changeStartingWeightForm.invalid" onclick="document.getElementById('chn-btn').click()" class="button is-primary">
+                        <span>Change</span>
+                    </button>
+                    <button onclick="startingWeightModal.classList.toggle('is-active')" id="close-btn" class="button">Close</button>
+                
+        </footer>
+    </div>
+</div>
+
+<!--current weight modal-->
+<div class="modal animate__animated animate__fadeIn" id="currentWeightModal">
+    <div class="modal-background" onclick="currentWeightModal.classList.toggle('is-active')"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Change Current Weight</p>
+            <button class="delete" aria-label="close" id="close" onclick="currentWeightModal.classList.toggle('is-active')"></button>
+        </header>
+        <section class="modal-card-body">
+             <form #changeCurrentWeightForm="ngForm" (ngSubmit)="onChangeCurrentWeight(changeCurrentWeightForm)">
+                <div class="field">
+                    <label class="label">Current Weight:</label>
+                    <input class="input is-rounded"  type="number" name="currentWeight" required ngModel>
+                </div>
+                <button type="submit" style="display: none;" id="chn-btn1"></button>
+             </form>
+            
+        </section>
+        <footer class="modal-card-foot">
+    
+                    <button [disabled]="changeCurrentWeightForm.invalid" onclick="document.getElementById('chn-btn1').click()" class="button is-primary">
+                        <span>Change</span>
+                    </button>
+                    <button onclick="currentWeightModal.classList.toggle('is-active')" id="close-btn1" class="button">Close</button>
+                
+        </footer>
+    </div>
+</div>
+
+<!--new entry modal-->
+<div class="modal animate__animated animate__fadeIn" id="createNewEntryModal">
+    <div class="modal-background" onclick="createNewEntryModal.classList.toggle('is-active')"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Create New Entry</p>
+            <button class="delete" aria-label="close" id="close" onclick="createNewEntryModal.classList.toggle('is-active')"></button>
+        </header>
+        <section class="modal-card-body">
+             <form #createNewEntryForm="ngForm" (ngSubmit)="onCreateNewEntry(createNewEntryForm.value)">
+                <div class="field">
+                    <label class="label">Pick a date</label>
+                    <input id="date" name="date" type="date" required ngModel>
+                    
+                    <label class="label">Weight</label>
+                        <div class="field has-addons">
+                            <div class="control has-icons-left">
+                                <input style="color:whitesmoke" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="3" class="input is-rounded is-primary" type="number" name="weight" required ngModel> 
+                                    <span class="icon is-small is-left">
+                                        <fa-icon [icon]="faWeight"></fa-icon>
+                                    </span>
+                            </div>
+                        <p class="control">
+                            <a style="background-color: rgb(47, 47, 47); color:whitesmoke" class="button is-static">lbs</a>
+                        </p>
+                        </div>  
+                    </div>
+                <button type="submit" style="display: none;" id="create-btn"></button>
+             </form>
+            
+        </section>
+        <footer class="modal-card-foot">
+    
+                    <button [disabled]="createNewEntryForm.invalid" onclick="document.getElementById('create-btn').click()" class="button is-primary">
+                        <span>Create</span>
+                    </button>
+                    <button onclick="createNewEntryModal.classList.toggle('is-active')" id="close-btn" class="button">Close</button>
+                
+        </footer>
+    </div>
+</div>
