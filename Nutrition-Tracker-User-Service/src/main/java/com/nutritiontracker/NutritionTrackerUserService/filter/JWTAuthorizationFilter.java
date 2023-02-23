@@ -10,10 +10,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import jakarta.servlet.Filter;
+
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import java.io.IOException;
 import java.util.List;
 
@@ -23,7 +29,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
 //authorize or not authorize any request only once
-public class JWTAuthorizationFilter extends OncePerRequestFilter {
+public class JWTAuthorizationFilter extends OncePerRequestFilter implements Filter, javax.servlet.Filter {
     private JWTTokenProvider jwtTokenProvider;
 
     public JWTAuthorizationFilter(JWTTokenProvider jwtTokenProvider) {
@@ -55,4 +61,13 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     }
 
 
+    @Override
+    public void init(FilterConfig filterConfig) throws javax.servlet.ServletException {
+
+    }
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, javax.servlet.FilterChain chain) throws IOException, javax.servlet.ServletException {
+
+    }
 }

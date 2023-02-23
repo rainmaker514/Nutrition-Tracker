@@ -38,13 +38,13 @@ public class UserService implements UserServiceInterface, UserDetailsService {
     private final UserRepository userRepository;
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
     private BCryptPasswordEncoder passwordEncoder;
-    private EmailService emailService;
+    //private EmailService emailService;
 
     @Autowired
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, EmailService emailService) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder/*, EmailService emailService*/) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.emailService = emailService;
+        //this.emailService = emailService;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class UserService implements UserServiceInterface, UserDetailsService {
         user.setPassword(encodePassword(password));
         userRepository.save(user);
         LOGGER.info("New password: " + password);
-        emailService.sendNewPasswordEmail(user.getFirstname(), password, user.getEmail());
+        //emailService.sendNewPasswordEmail(user.getFirstname(), password, user.getEmail());
     }
 
     @Override
