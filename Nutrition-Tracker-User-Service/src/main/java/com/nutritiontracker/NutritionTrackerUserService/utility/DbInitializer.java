@@ -2,7 +2,7 @@ package com.nutritiontracker.NutritionTrackerUserService.utility;
 
 import com.nutritiontracker.NutritionTrackerUserService.controller.UserController;
 import com.nutritiontracker.NutritionTrackerUserService.model.User;
-import com.nutritiontracker.NutritionTrackerUserService.repo.UserRepository;
+import com.nutritiontracker.NutritionTrackerUserService.repository.UserRepository;
 import com.nutritiontracker.NutritionTrackerUserService.service.UserServiceInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.GenerationType;
+import jakarta.persistence.GenerationType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

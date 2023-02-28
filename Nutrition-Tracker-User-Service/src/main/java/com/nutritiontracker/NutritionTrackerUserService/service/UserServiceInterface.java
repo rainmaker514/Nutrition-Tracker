@@ -5,7 +5,7 @@ import com.nutritiontracker.NutritionTrackerUserService.exception.domain.EmailNo
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.UserNotFoundException;
 import com.nutritiontracker.NutritionTrackerUserService.model.User;
 
-import javax.mail.MessagingException;
+import jakarta.mail.MessagingException;
 import java.util.List;
 
 public interface UserServiceInterface {

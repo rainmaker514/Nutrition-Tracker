@@ -2,13 +2,19 @@ package com.nutritiontracker.NutritionTrackerUserService.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.List;
+import com.nutritiontracker.NutritionTrackerUserService.enumeration.Role;
+import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+//merge with user principal
 @Entity
 @Table(name="users")
-public class User implements Serializable {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="user_id", nullable = false, updatable = false)
@@ -24,8 +30,8 @@ public class User implements Serializable {
     private int age;
     private String activityLevel;
     private String goal;
-    private String role;
-    private String[] authorities;
+    @Enumerated(EnumType.STRING)
+    private Role role;
     private int startingWeight;
     @OneToMany(mappedBy = "users")
     private List<Entry> entries;
@@ -34,7 +40,7 @@ public class User implements Serializable {
 
     //user constructor
     public User(Long id, String firstname, String lastname, String email, String password, String height, int weight, int age,
-                String activityLevel, String goal, String role, String[] authorities, int startingWeight, List<Entry> entries) {
+                String activityLevel, String goal, Role role, String[] authorities, int startingWeight, List<Entry> entries) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -46,7 +52,6 @@ public class User implements Serializable {
         this.activityLevel = activityLevel;
         this.goal = goal;
         this.role = role;
-        this.authorities = authorities;
         this.startingWeight = startingWeight;
         this.entries = entries;
     }
@@ -64,13 +69,48 @@ public class User implements Serializable {
     public String getFirstname() { return firstname; }
     public String getLastname() { return lastname; }
     public String getEmail() { return email; }
-    public String getPassword() { return password; }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return getEmail();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
+
     public String getHeight() { return height; }
     public int getWeight() { return weight; }
     public int getAge() { return age; }
     public String getActivityLevel() { return activityLevel; }
     public String getGoal() { return goal; }
-    public String getRole() { return role; }
+    public Role getRole() { return role; }
     public void setId(Long id) { this.id = id; }
     public void setFirstname(String firstname) { this.firstname = firstname; }
     public void setLastname(String lastname) { this.lastname = lastname; }
@@ -80,15 +120,9 @@ public class User implements Serializable {
     public void setWeight(int weight) { this.weight = weight; }
     public void setAge(int age) { this.age = age; }
     public void setGoal(String goal) { this.goal = goal; }
-    public void setRole(String role) { this.role = role; }
+    public void setRole(Role role) { this.role = role; }
     public void setActivityLevel(String activityLevel) {
         this.activityLevel = activityLevel;
-    }
-    public String[] getAuthorities() {
-        return authorities;
-    }
-    public void setAuthorities(String[] authorities) {
-        this.authorities = authorities;
     }
     public int getStartingWeight() { return startingWeight; }
     public void setStartingWeight(int startingWeight) { this.startingWeight = startingWeight; }

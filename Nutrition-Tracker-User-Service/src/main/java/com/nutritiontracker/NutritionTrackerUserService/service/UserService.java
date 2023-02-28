@@ -5,8 +5,7 @@ import com.nutritiontracker.NutritionTrackerUserService.exception.domain.EmailEx
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.EmailNotFoundException;
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.UserNotFoundException;
 import com.nutritiontracker.NutritionTrackerUserService.model.User;
-import com.nutritiontracker.NutritionTrackerUserService.model.UserPrincipal;
-import com.nutritiontracker.NutritionTrackerUserService.repo.UserRepository;
+import com.nutritiontracker.NutritionTrackerUserService.repository.UserRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -20,8 +19,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
-import javax.transaction.Transactional;
+import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -160,9 +159,9 @@ public class UserService implements UserServiceInterface, UserDetailsService {
             LOGGER.error(NO_USER_FOUND_BY_EMAIL + email);
             throw new UsernameNotFoundException(NO_USER_FOUND_BY_EMAIL + email);
         }else{
-            UserPrincipal userPrincipal = new UserPrincipal(user);
+
             LOGGER.info("Returning found user by email: " + email);
-            return userPrincipal;
+            return user;
         }
     }
 

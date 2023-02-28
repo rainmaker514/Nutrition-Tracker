@@ -16,7 +16,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.persistence.NoResultException;
+import jakarta.persistence.NoResultException;
 import java.util.Objects;
 
 import static org.springframework.http.HttpStatus.*;

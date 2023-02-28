@@ -1,4 +1,4 @@
-package com.nutritiontracker.NutritionTrackerUserService.repo;
+package com.nutritiontracker.NutritionTrackerUserService.repository;
 
 import com.nutritiontracker.NutritionTrackerUserService.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;

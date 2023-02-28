@@ -6,7 +6,6 @@ import com.nutritiontracker.NutritionTrackerUserService.exception.domain.EmailNo
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.UserNotFoundException;
 import com.nutritiontracker.NutritionTrackerUserService.model.HttpResponse;
 import com.nutritiontracker.NutritionTrackerUserService.model.User;
-import com.nutritiontracker.NutritionTrackerUserService.model.UserPrincipal;
 import com.nutritiontracker.NutritionTrackerUserService.service.UserServiceInterface;
 import com.nutritiontracker.NutritionTrackerUserService.utility.JWTTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
-import javax.persistence.NoResultException;
+import jakarta.mail.MessagingException;
+import jakarta.persistence.NoResultException;
 import java.util.List;
 
 import static com.nutritiontracker.NutritionTrackerUserService.constant.SecurityConstant.JWT_TOKEN_HEADER;

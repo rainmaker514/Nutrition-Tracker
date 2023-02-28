@@ -2,7 +2,7 @@ package com.nutritiontracker.NutritionTrackerUserService.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 
 //model for user created progress entries

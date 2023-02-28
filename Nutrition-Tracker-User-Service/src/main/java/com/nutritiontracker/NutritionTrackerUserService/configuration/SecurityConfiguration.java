@@ -1,6 +1,7 @@
 package com.nutritiontracker.NutritionTrackerUserService.configuration;
 
-import com.nutritiontracker.NutritionTrackerUserService.constant.SecurityConstant;
+import com.nutritiontracker.NutritionTrackerUserService.authentication.JWTAuthenticationFilter;
+import com.nutritiontracker.NutritionTrackerUserService.repository.UserRepository;
 import com.nutritiontracker.NutritionTrackerUserService.filter.JWTAccessDeniedHandler;
 import com.nutritiontracker.NutritionTrackerUserService.filter.JWTAuthenticationEntryPoint;
 import com.nutritiontracker.NutritionTrackerUserService.filter.JWTAuthorizationFilter;
@@ -9,46 +10,80 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import javax.servlet.Filter;
 
 import static com.nutritiontracker.NutritionTrackerUserService.constant.SecurityConstant.PUBLIC_URLS;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration{
     private JWTAuthorizationFilter jwtAuthorizationFilter;
     private JWTAccessDeniedHandler jwtAccessDeniedHandler;
     private JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private UserDetailsService userDetailsService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AuthenticationProvider authenticationProvider;
+    private final UserRepository userRepository;
+    private final JWTAuthenticationFilter jwtAuthenticationFilter;
 
     @Autowired
     public SecurityConfiguration(JWTAuthorizationFilter jwtAuthorizationFilter, JWTAccessDeniedHandler jwtAccessDeniedHandler,
                                  JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint,
                                  @Qualifier("userDetailsService") UserDetailsService userDetailsService,
-                                 BCryptPasswordEncoder bCryptPasswordEncoder) {
+                                 BCryptPasswordEncoder bCryptPasswordEncoder, AuthenticationProvider authenticationProvider, UserRepository userRepository, JWTAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthorizationFilter = jwtAuthorizationFilter;
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.userDetailsService = userDetailsService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.authenticationProvider = authenticationProvider;
+        this.userRepository = userRepository;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
-    @Override
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf().disable().cors().and()
+                .sessionManagement().sessionCreationPolicy(STATELESS)
+                .and().authorizeHttpRequests().requestMatchers(PUBLIC_URLS).permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+
+        return authProvider;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
         auth.inMemoryAuthentication()
@@ -56,27 +91,27 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .password(bCryptPasswordEncoder.encode("admin"))
                 .roles("ADMIN");
     }
-    /*@Bean
-    public PasswordEncoder getPasswordEncoder(){
-        return NoOpPasswordEncoder.getInstance();
-    }*/
 
-    @Override
+
+    @Bean
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().cors().and()
                 .sessionManagement().sessionCreationPolicy(STATELESS)
-                .and().authorizeRequests().antMatchers(PUBLIC_URLS).permitAll()
+                .and().authorizeHttpRequests().requestMatchers(PUBLIC_URLS).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler)
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
-                .addFilterBefore(jwtAuthorizationFilter, (Class<? extends Filter>) UsernamePasswordAuthenticationFilter.class);
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
-    @Bean
-    @Override
+
+
+    /*@Bean
     public AuthenticationManager authenticationManagerBean() throws Exception{
         return super.authenticationManagerBean();
-    }
+    }*/
+
 }
