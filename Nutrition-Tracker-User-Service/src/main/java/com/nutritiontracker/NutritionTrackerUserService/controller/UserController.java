@@ -52,12 +52,12 @@ public class UserController extends ExceptionHandling {
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
-
+        return ResponseEntity.ok(userServiceInterface.register(request));
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody AuthenticationRequest request) {
-
+    @PostMapping("/login")
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
+        return ResponseEntity.ok(userServiceInterface.authenticate(request));
     }
 
     /*@PostMapping("/signup")
