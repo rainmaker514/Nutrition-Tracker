@@ -4,10 +4,14 @@ import com.nutritiontracker.NutritionTrackerUserService.exception.ExceptionHandl
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.EmailExistException;
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.EmailNotFoundException;
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.UserNotFoundException;
+import com.nutritiontracker.NutritionTrackerUserService.model.AuthenticationRequest;
+import com.nutritiontracker.NutritionTrackerUserService.model.AuthenticationResponse;
 import com.nutritiontracker.NutritionTrackerUserService.model.HttpResponse;
+import com.nutritiontracker.NutritionTrackerUserService.model.RegisterRequest;
 import com.nutritiontracker.NutritionTrackerUserService.model.User;
 import com.nutritiontracker.NutritionTrackerUserService.service.UserServiceInterface;
 import com.nutritiontracker.NutritionTrackerUserService.utility.JWTTokenProvider;
+import org.apache.catalina.authenticator.SpnegoAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -46,13 +50,23 @@ public class UserController extends ExceptionHandling {
 
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/register")
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
+
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody AuthenticationRequest request) {
+
+    }
+
+    /*@PostMapping("/signup")
     public ResponseEntity<User> register(@RequestBody User user) throws UserNotFoundException, EmailExistException {
         User newUser = userServiceInterface.register(user.getFirstname(), user.getLastname(), user.getEmail(),
                 user.getPassword());
 
         return new ResponseEntity<>(newUser, OK);
-    }
+    }*/
 
     @PostMapping("/add")
     @PreAuthorize("hasAnyAuthority('user:create')")
@@ -66,7 +80,7 @@ public class UserController extends ExceptionHandling {
         return new ResponseEntity<>(newUser, OK);
     }
 
-    @PostMapping("/login")
+    /*@PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody User user) throws UserNotFoundException, EmailExistException {
 
         authenticate(user.getEmail(), user.getPassword());
@@ -75,7 +89,7 @@ public class UserController extends ExceptionHandling {
         HttpHeaders jwtHeader = getJWTHeader(userPrincipal);
 
         return new ResponseEntity<>(loginUser, jwtHeader, OK);
-    }
+    }*/
 
     @PutMapping("/update")
     public ResponseEntity<User> updateUser(@RequestParam("currentEmail") String currentEmail,
