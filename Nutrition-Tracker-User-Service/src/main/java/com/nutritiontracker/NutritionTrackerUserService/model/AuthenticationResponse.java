@@ -1,5 +1,8 @@
 package com.nutritiontracker.NutritionTrackerUserService.model;
 
+import lombok.Builder;
+
+@Builder
 public class AuthenticationResponse {
     private String token;
 

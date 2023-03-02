@@ -3,7 +3,11 @@ package com.nutritiontracker.NutritionTrackerUserService.enumeration;
 import static com.nutritiontracker.NutritionTrackerUserService.constant.Authorities.*;
 
 public enum Role {
-    ROLE_USER(USER_AUTHORITIES),
+
+    USER,
+    ADMIN
+
+    /*ROLE_USER(USER_AUTHORITIES),
     ROLE_ADMIN(ADMIN_AUTHORITIES);
 
     private String[] authorities;
@@ -14,5 +18,5 @@ public enum Role {
 
     public String[] getAuthorities() {
         return authorities;
-    }
+    }*/
 }

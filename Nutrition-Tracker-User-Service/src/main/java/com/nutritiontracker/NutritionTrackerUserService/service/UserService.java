@@ -1,11 +1,16 @@
 package com.nutritiontracker.NutritionTrackerUserService.service;
 
+import com.nutritiontracker.NutritionTrackerUserService.authentication.JWTService;
 import com.nutritiontracker.NutritionTrackerUserService.enumeration.Role;
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.EmailExistException;
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.EmailNotFoundException;
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.UserNotFoundException;
+import com.nutritiontracker.NutritionTrackerUserService.model.AuthenticationRequest;
+import com.nutritiontracker.NutritionTrackerUserService.model.AuthenticationResponse;
+import com.nutritiontracker.NutritionTrackerUserService.model.RegisterRequest;
 import com.nutritiontracker.NutritionTrackerUserService.model.User;
 import com.nutritiontracker.NutritionTrackerUserService.repository.UserRepository;
+import lombok.var;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -16,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +30,6 @@ import jakarta.transaction.Transactional;
 
 import java.util.List;
 
-import static com.nutritiontracker.NutritionTrackerUserService.enumeration.Role.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 @Service
@@ -36,14 +41,16 @@ public class UserService implements UserServiceInterface, UserDetailsService {
     public static final String NO_USER_FOUND_BY_EMAIL = "No user found by email: ";
     private final UserRepository userRepository;
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
-    private BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final JWTService jwtService;
     //private EmailService emailService;
 
     @Autowired
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder/*, EmailService emailService*/) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,/*, EmailService emailService*/JWTService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         //this.emailService = emailService;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -96,6 +103,27 @@ public class UserService implements UserServiceInterface, UserDetailsService {
         userRepository.save(user);
 
         return user;
+    }
+
+    @Override
+    public AuthenticationResponse register(RegisterRequest request) {
+        var user = User.builder()
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.USER)
+                .build();
+        userRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();
+    }
+
+    @Override
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        return null;
     }
 
     @Override
