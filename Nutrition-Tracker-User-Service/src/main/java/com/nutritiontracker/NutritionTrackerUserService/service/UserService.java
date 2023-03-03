@@ -43,6 +43,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class UserService implements UserServiceInterface, UserDetailsService {
     public static final String EMAIL_ALREADY_EXISTS = "Email already exists.";
     public static final String NO_USER_FOUND_BY_EMAIL = "No user found by email: ";
+    public static final String USER_NOT_FOUND = "User not found.";
     private final UserRepository userRepository;
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
     private final PasswordEncoder passwordEncoder;
@@ -96,7 +97,7 @@ public class UserService implements UserServiceInterface, UserDetailsService {
             userRepository.save(newUser);
             user = newUser;
         } else {
-            throw new EmailExistException("A user with the email: " + email + " already exists.");
+            throw new EmailExistException(EMAIL_ALREADY_EXISTS);
         }
 
         /*User user = new User();
@@ -117,18 +118,18 @@ public class UserService implements UserServiceInterface, UserDetailsService {
     public void deleteUser(String email) throws UserNotFoundException {
         var user = findUserByEmail(email);
         if (user == null) {
-            throw new UserNotFoundException("User not found.");
+            throw new UserNotFoundException(USER_NOT_FOUND);
         }
         userRepository.deleteUserById(user.getId());
     }
 
     @Override
-    public void resetPassword(String email) throws EmailNotFoundException, MessagingException {
-        User user = userRepository.findUserByEmail(email);
+    public void resetPassword(String email) throws EmailNotFoundException {
+        var user = findUserByEmail(email);
         if(user == null){
             throw new EmailNotFoundException(NO_USER_FOUND_BY_EMAIL + email);
         }
-        String password = generatePassword();
+        var password = generatePassword();
         user.setPassword(encodePassword(password));
         userRepository.save(user);
         LOGGER.info("New password: " + password);
