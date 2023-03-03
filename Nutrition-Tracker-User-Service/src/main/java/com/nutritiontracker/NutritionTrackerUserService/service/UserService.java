@@ -138,9 +138,7 @@ public class UserService implements UserServiceInterface, UserDetailsService {
 
     @Override
     public void changePassword(String email, String newPassword) throws EmailNotFoundException{
-
-
-        User user = userRepository.findUserByEmail(email);
+        var user = findUserByEmail(email);
 
         if(user == null){
             throw new EmailNotFoundException(NO_USER_FOUND_BY_EMAIL + email);
