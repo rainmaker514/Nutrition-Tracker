@@ -1,5 +1,6 @@
 package com.nutritiontracker.NutritionTrackerUserService.controller;
 
+import com.nutritiontracker.NutritionTrackerUserService.enumeration.Role;
 import com.nutritiontracker.NutritionTrackerUserService.exception.ExceptionHandling;
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.EmailExistException;
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.EmailNotFoundException;
@@ -10,8 +11,6 @@ import com.nutritiontracker.NutritionTrackerUserService.model.HttpResponse;
 import com.nutritiontracker.NutritionTrackerUserService.model.RegisterRequest;
 import com.nutritiontracker.NutritionTrackerUserService.model.User;
 import com.nutritiontracker.NutritionTrackerUserService.service.UserServiceInterface;
-import com.nutritiontracker.NutritionTrackerUserService.utility.JWTTokenProvider;
-import org.apache.catalina.authenticator.SpnegoAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -55,8 +54,8 @@ public class UserController extends ExceptionHandling {
         return ResponseEntity.ok(userServiceInterface.register(request));
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(userServiceInterface.authenticate(request));
     }
 
@@ -73,7 +72,7 @@ public class UserController extends ExceptionHandling {
     public ResponseEntity<User> addNewUser(@RequestParam("firstname") String firstname,
                                            @RequestParam("lastname") String lastname,
                                            @RequestParam("email") String email,
-                                           @RequestParam("role") String role) throws UserNotFoundException, EmailExistException,
+                                           @RequestParam("role") Role role) throws UserNotFoundException, EmailExistException,
             MessagingException {
         User newUser = userServiceInterface.addNewUser(firstname, lastname, email, role);
 

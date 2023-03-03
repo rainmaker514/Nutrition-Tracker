@@ -1,5 +1,6 @@
 package com.nutritiontracker.NutritionTrackerUserService.service;
 
+import com.nutritiontracker.NutritionTrackerUserService.enumeration.Role;
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.EmailExistException;
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.EmailNotFoundException;
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.UserNotFoundException;
@@ -18,12 +19,12 @@ public interface UserServiceInterface {
     List<User> getAllUsers();
     User findUserByEmail(String email);
     User findUserById(Long id);
-    User addNewUser(String firstname, String lastname, String email, String role) throws UserNotFoundException, EmailExistException,
+    User addNewUser(String firstname, String lastname, String email, Role role) throws UserNotFoundException, EmailExistException,
             MessagingException;
     User updateUser(String currentEmail, String newFirstname, String newLastname, String newEmail, String newHeight,
                     int newWeight, int newAge, String newActivityLevel, String newGoal, String role)
             throws UserNotFoundException, EmailExistException;
-    void deleteUser(String email);
+    void deleteUser(String email) throws UserNotFoundException;
     void resetPassword(String email) throws EmailNotFoundException, MessagingException;
     void changePassword(String email, String newPassword) throws EmailNotFoundException;
     User changeStartingWeight(String email, int startingWeight) throws EmailNotFoundException;

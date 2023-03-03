@@ -10,6 +10,7 @@ import com.nutritiontracker.NutritionTrackerUserService.model.AuthenticationResp
 import com.nutritiontracker.NutritionTrackerUserService.model.RegisterRequest;
 import com.nutritiontracker.NutritionTrackerUserService.model.User;
 import com.nutritiontracker.NutritionTrackerUserService.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.var;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -17,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,6 +35,7 @@ import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
+@RequiredArgsConstructor
 @Service
 @Component
 @Transactional
@@ -43,19 +47,78 @@ public class UserService implements UserServiceInterface, UserDetailsService {
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
+    private final AuthenticationManager authenticationManager;
     //private EmailService emailService;
 
-    @Autowired
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,/*, EmailService emailService*/JWTService jwtService) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        //this.emailService = emailService;
-        this.jwtService = jwtService;
+    @Override
+    public AuthenticationResponse register(RegisterRequest request) {
+        var user = User.builder()
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.USER)
+                .build();
+        userRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();
     }
 
     @Override
-    public void deleteUser(String email){
-        User user = userRepository.findUserByEmail(email);
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
+                request.getPassword()));
+        var user = loadUserByUsername(request.getEmail());
+        var jwtToken = jwtService.generateToken(user);
+
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();
+    }
+
+    @Override
+    public User addNewUser(String firstname, String lastname, String email, Role role) throws EmailExistException{
+
+        var user = findUserByEmail(email);
+
+        if(user == null) {
+            var password = generatePassword();
+            var newUser = User.builder()
+                    .firstname(firstname)
+                    .lastname(lastname)
+                    .email(email)
+                    .password(passwordEncoder.encode(password))
+                    .role(Role.USER)
+                    .build();
+            userRepository.save(newUser);
+            user = newUser;
+        } else {
+            throw new EmailExistException("A user with the email: " + email + " already exists.");
+        }
+
+        /*User user = new User();
+        String password = generatePassword();
+        user.setFirstname(firstname);
+        user.setLastname(lastname);
+        user.setEmail(email);
+        user.setPassword(encodePassword(password));
+        user.setRole(getRoleEnumName(role).name());
+        user.setAuthorities(getRoleEnumName(role).getAuthorities());
+        userRepository.save(user);
+        //emailService.sendNewPasswordEmail(firstname, password, email);
+        LOGGER.info("Password is: " + password);*/
+
+        return user;
+    }
+
+    public void deleteUser(String email) throws UserNotFoundException {
+        var user = findUserByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User not found.");
+        }
         userRepository.deleteUserById(user.getId());
     }
 
@@ -105,26 +168,7 @@ public class UserService implements UserServiceInterface, UserDetailsService {
         return user;
     }
 
-    @Override
-    public AuthenticationResponse register(RegisterRequest request) {
-        var user = User.builder()
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
-                .build();
-        userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
-    }
 
-    @Override
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        return null;
-    }
 
     @Override
     public List<User> getAllUsers() {
@@ -136,24 +180,7 @@ public class UserService implements UserServiceInterface, UserDetailsService {
         return userRepository.findUserByEmail(email);
     }
 
-    @Override
-    public User addNewUser(String firstname, String lastname, String email, String role) throws UserNotFoundException, EmailExistException,
-            MessagingException{
-        validateNewEmail(EMPTY, email);
-        User user = new User();
-        String password = generatePassword();
-        user.setFirstname(firstname);
-        user.setLastname(lastname);
-        user.setEmail(email);
-        user.setPassword(encodePassword(password));
-        user.setRole(getRoleEnumName(role).name());
-        user.setAuthorities(getRoleEnumName(role).getAuthorities());
-        userRepository.save(user);
-        //emailService.sendNewPasswordEmail(firstname, password, email);
-        LOGGER.info("Password is: " + password);
 
-        return user;
-    }
 
     @Override
     public User updateUser(String currentEmail, String newFirstname, String newLastname, String newEmail, String newHeight,
@@ -193,21 +220,7 @@ public class UserService implements UserServiceInterface, UserDetailsService {
         }
     }
 
-    public User register(String firstname, String lastname, String email, String password) throws UserNotFoundException, EmailExistException {
 
-        validateNewEmail(EMPTY, email);
-        User user = new User();
-        String encodedPassword = encodePassword(password);
-        user.setFirstname(firstname);
-        user.setLastname(lastname);
-        user.setEmail(email);
-        user.setPassword(encodedPassword);
-        user.setRole(ROLE_USER.name());
-        user.setAuthorities(ROLE_USER.getAuthorities());
-        userRepository.save(user);
-
-        return user;
-    }
 
     private Role getRoleEnumName(String role) {
         return Role.valueOf(role.toUpperCase());

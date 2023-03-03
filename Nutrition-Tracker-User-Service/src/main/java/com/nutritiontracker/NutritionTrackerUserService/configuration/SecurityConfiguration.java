@@ -84,6 +84,7 @@ public class SecurityConfiguration{
         return config.getAuthenticationManager();
     }
 
+    /*
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
         auth.inMemoryAuthentication()
@@ -109,7 +110,7 @@ public class SecurityConfiguration{
 
 
 
-    /*@Bean
+    @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception{
         return super.authenticationManagerBean();
     }*/

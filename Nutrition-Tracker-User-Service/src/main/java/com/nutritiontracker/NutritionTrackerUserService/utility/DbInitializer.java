@@ -1,6 +1,7 @@
 package com.nutritiontracker.NutritionTrackerUserService.utility;
 
 import com.nutritiontracker.NutritionTrackerUserService.controller.UserController;
+import com.nutritiontracker.NutritionTrackerUserService.enumeration.Role;
 import com.nutritiontracker.NutritionTrackerUserService.model.User;
 import com.nutritiontracker.NutritionTrackerUserService.repository.UserRepository;
 import com.nutritiontracker.NutritionTrackerUserService.service.UserServiceInterface;
@@ -36,7 +37,7 @@ public class DbInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception{
         logger.info("Initializing DB...");
         userRepository.deleteAll();
-        userServiceInterface.addNewUser("admin", "admin", "admin", "ROLE_ADMIN");
+        userServiceInterface.addNewUser("admin", "admin", "admin", Role.ADMIN);
         logger.info("DB initialized!");
     }
 }
