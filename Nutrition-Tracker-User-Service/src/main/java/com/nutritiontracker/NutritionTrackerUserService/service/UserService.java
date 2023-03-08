@@ -167,7 +167,48 @@ public class UserService implements UserServiceInterface, UserDetailsService {
         return user;
     }
 
+    @Override
+    public User updateUser(String currentEmail, String newFirstname, String newLastname, String newEmail, String newHeight,
+                           int newWeight, int newAge, String newActivityLevel, String newGoal, Role newRole) throws
+            EmailNotFoundException {
+        var currentUser = findUserByEmail(currentEmail);
+        if(currentUser == null){
+            throw new EmailNotFoundException(NO_USER_FOUND_BY_EMAIL + currentEmail);
+        }
 
+        var updatedUser = User.builder()
+                .firstname(newFirstname)
+                .lastname(newLastname)
+                .email(newEmail)
+                .height(newHeight)
+                .weight(newWeight)
+                .age(newAge)
+                .activityLevel(newActivityLevel)
+                .goal(newGoal)
+                .role(newRole)
+                .build();
+
+        userRepository.save(updatedUser);
+        /*User currentUser = validateNewEmail(currentEmail, newEmail);
+        currentUser.setFirstname(newFirstname);
+        currentUser.setLastname(newLastname);
+        currentUser.setEmail(newEmail);
+        currentUser.setHeight(newHeight);
+        currentUser.setWeight(newWeight);
+        currentUser.setAge(newAge);
+        currentUser.setActivityLevel(newActivityLevel);
+        currentUser.setGoal(newGoal);
+        currentUser.setRole(getRoleEnumName(role).name());
+        currentUser.setAuthorities(getRoleEnumName(role).getAuthorities());
+        userRepository.save(currentUser);*/
+
+        return updatedUser;
+    }
+
+    @Override
+    public User findUserById(Long id){
+        return userRepository.findUserById(id);
+    }
 
     @Override
     public List<User> getAllUsers() {
@@ -179,36 +220,9 @@ public class UserService implements UserServiceInterface, UserDetailsService {
         return userRepository.findUserByEmail(email);
     }
 
-
-
-    @Override
-    public User updateUser(String currentEmail, String newFirstname, String newLastname, String newEmail, String newHeight,
-                           int newWeight, int newAge, String newActivityLevel, String newGoal, String role) throws
-            UserNotFoundException, EmailExistException {
-        User currentUser = validateNewEmail(currentEmail, newEmail);
-        currentUser.setFirstname(newFirstname);
-        currentUser.setLastname(newLastname);
-        currentUser.setEmail(newEmail);
-        currentUser.setHeight(newHeight);
-        currentUser.setWeight(newWeight);
-        currentUser.setAge(newAge);
-        currentUser.setActivityLevel(newActivityLevel);
-        currentUser.setGoal(newGoal);
-        currentUser.setRole(getRoleEnumName(role).name());
-        currentUser.setAuthorities(getRoleEnumName(role).getAuthorities());
-        userRepository.save(currentUser);
-
-        return currentUser;
-    }
-
-    @Override
-    public User findUserById(Long id){
-        return userRepository.findUserById(id);
-    }
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findUserByEmail(email);
+        var user = userRepository.findUserByEmail(email);
         if(user == null){
             LOGGER.error(NO_USER_FOUND_BY_EMAIL + email);
             throw new UsernameNotFoundException(NO_USER_FOUND_BY_EMAIL + email);
@@ -219,11 +233,9 @@ public class UserService implements UserServiceInterface, UserDetailsService {
         }
     }
 
-
-
-    private Role getRoleEnumName(String role) {
+    /*private Role getRoleEnumName(String role) {
         return Role.valueOf(role.toUpperCase());
-    }
+    }*/
 
     private String encodePassword(String password) {
         return passwordEncoder.encode(password);
@@ -233,7 +245,7 @@ public class UserService implements UserServiceInterface, UserDetailsService {
         return RandomStringUtils.randomAlphanumeric(10);
     }
 
-    private User validateNewEmail(String currentUserEmail, String newEmail) throws EmailExistException, UserNotFoundException {
+    /*private User validateNewEmail(String currentUserEmail, String newEmail) throws EmailExistException, UserNotFoundException {
         User userByNewEmail = findUserByEmail(newEmail);
 
         if(StringUtils.isNotBlank(currentUserEmail)){
@@ -255,5 +267,5 @@ public class UserService implements UserServiceInterface, UserDetailsService {
             }
             return null;
         }
-    }
+    }*/
 }

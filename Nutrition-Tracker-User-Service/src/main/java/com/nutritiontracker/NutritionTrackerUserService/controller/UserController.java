@@ -100,7 +100,7 @@ public class UserController extends ExceptionHandling {
                                            @RequestParam("age") int age,
                                            @RequestParam("activityLevel") String activityLevel,
                                            @RequestParam("goal") String goal,
-                                           @RequestParam("role") String role) throws UserNotFoundException, EmailExistException {
+                                           @RequestParam("role") Role role) throws EmailNotFoundException {
 
         User updatedUser = userServiceInterface.updateUser (currentEmail, firstname, lastname, email, height, weight, age,
                 activityLevel, goal, role);

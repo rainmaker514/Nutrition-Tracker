@@ -22,8 +22,8 @@ public interface UserServiceInterface {
     User addNewUser(String firstname, String lastname, String email, Role role) throws UserNotFoundException, EmailExistException,
             MessagingException;
     User updateUser(String currentEmail, String newFirstname, String newLastname, String newEmail, String newHeight,
-                    int newWeight, int newAge, String newActivityLevel, String newGoal, String role)
-            throws UserNotFoundException, EmailExistException;
+                    int newWeight, int newAge, String newActivityLevel, String newGoal, Role newRole)
+            throws EmailNotFoundException;
     void deleteUser(String email) throws UserNotFoundException;
     void resetPassword(String email) throws EmailNotFoundException, MessagingException;
     void changePassword(String email, String newPassword) throws EmailNotFoundException;
