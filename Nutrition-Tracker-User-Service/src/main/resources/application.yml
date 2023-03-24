@@ -8,7 +8,7 @@
 #spring.datasource.driver-class-name= com.mysql.cj.jdbc.Driver
 
 jwt:
-  secret: 't1g54wibt3iqg5u8t0bjhaug3et9ho3e'
+  secret: '5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437'
 
 server:
   port: 8080
@@ -27,9 +27,9 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
-  security:
-    user:
-      name: admin
-      password: admin
-      roles: ROLE_ADMIN
+        dialect: org.hibernate.dialect.MySQLDialect
+  #security:
+   # user:
+    #  name: admin
+     # password: admin
+      #role: ROLE_ADMIN
