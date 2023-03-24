@@ -42,7 +42,7 @@ public class User implements UserDetails {
 
     //user constructor
     public User(Long id, String firstname, String lastname, String email, String password, String height, int weight, int age,
-                String activityLevel, String goal, Role role, String[] authorities, int startingWeight, List<Entry> entries) {
+                String activityLevel, String goal, Role role, int startingWeight, List<Entry> entries) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;

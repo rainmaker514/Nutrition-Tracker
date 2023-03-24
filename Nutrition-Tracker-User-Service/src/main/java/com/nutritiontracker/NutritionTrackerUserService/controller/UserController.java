@@ -38,15 +38,11 @@ public class UserController extends ExceptionHandling {
     public static final String GENERIC_SUCCESS = "Action successful.";
     private UserServiceInterface userServiceInterface;
     private AuthenticationManager authenticationManager;
-    private JWTTokenProvider jwtTokenProvider;
 
     @Autowired
-    public UserController(UserServiceInterface userServiceInterface, AuthenticationManager authenticationManager,
-                          JWTTokenProvider jwtTokenProvider) {
+    public UserController(UserServiceInterface userServiceInterface, AuthenticationManager authenticationManager) {
         this.userServiceInterface = userServiceInterface;
         this.authenticationManager = authenticationManager;
-        this.jwtTokenProvider = jwtTokenProvider;
-
     }
 
     @PostMapping("/register")
@@ -161,7 +157,7 @@ public class UserController extends ExceptionHandling {
 
     @DeleteMapping("/delete/{email}")
     @PreAuthorize("hasAnyAuthority('user:delete')")
-    public ResponseEntity<HttpResponse> deleteUser(@PathVariable("email") String email){
+    public ResponseEntity<HttpResponse> deleteUser(@PathVariable("email") String email) throws UserNotFoundException {
         userServiceInterface.deleteUser(email);
         return response(OK, USER_DELETED);
     }
@@ -170,16 +166,4 @@ public class UserController extends ExceptionHandling {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
                 message.toUpperCase()), httpStatus);
     }
-
-    private HttpHeaders getJWTHeader(UserPrincipal userPrincipal) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(JWT_TOKEN_HEADER, jwtTokenProvider.generateJwtToken(userPrincipal));
-        return headers;
-    }
-
-    private void authenticate(String email, String password) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-    }
-
-
 }

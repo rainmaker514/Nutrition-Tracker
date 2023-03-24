@@ -7,8 +7,8 @@ public enum Role {
     /*USER,
     ADMIN*/
 
-    USER(USER_AUTHORITIES),
-    ADMIN(ADMIN_AUTHORITIES);
+    ROLE_USER(USER_AUTHORITIES),
+    ROLE_ADMIN(ADMIN_AUTHORITIES);
 
     private String[] authorities;
 

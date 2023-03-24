@@ -35,9 +35,9 @@ public class DbInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception{
-        logger.info("Initializing DB...");
+        /*logger.info("Initializing DB...");
         userRepository.deleteAll();
-        userServiceInterface.addNewUser("admin", "admin", "admin", Role.ADMIN);
-        logger.info("DB initialized!");
+        userServiceInterface.addNewUser("admin", "admin", "admin", Role.ROLE_ADMIN);
+        logger.info("DB initialized!");*/
     }
 }

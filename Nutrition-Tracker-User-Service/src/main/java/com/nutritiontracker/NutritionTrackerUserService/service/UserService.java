@@ -23,7 +23,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -40,28 +39,29 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 @Component
 @Transactional
 @Qualifier("userDetailsService")
-public class UserService implements UserServiceInterface, UserDetailsService {
+public class UserService implements UserServiceInterface {
     public static final String EMAIL_ALREADY_EXISTS = "Email already exists.";
     public static final String NO_USER_FOUND_BY_EMAIL = "No user found by email: ";
     public static final String USER_NOT_FOUND = "User not found.";
     private final UserRepository userRepository;
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
     private final PasswordEncoder passwordEncoder;
+    private final UserDetailsService userDetailsService;
     private final JWTService jwtService;
     private final AuthenticationManager authenticationManager;
     //private EmailService emailService;
 
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
-        var user = User.builder()
+        User user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
+                .role(Role.ROLE_USER)
                 .build();
         userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(user);
 
         return AuthenticationResponse.builder()
                 .token(jwtToken)
@@ -72,8 +72,8 @@ public class UserService implements UserServiceInterface, UserDetailsService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
                 request.getPassword()));
-        var user = loadUserByUsername(request.getEmail());
-        var jwtToken = jwtService.generateToken(user);
+        UserDetails user = userDetailsService.loadUserByUsername(request.getEmail());
+        String jwtToken = jwtService.generateToken(user);
 
         return AuthenticationResponse.builder()
                 .token(jwtToken)
@@ -83,16 +83,16 @@ public class UserService implements UserServiceInterface, UserDetailsService {
     @Override
     public User addNewUser(String firstname, String lastname, String email, Role role) throws EmailExistException{
 
-        var user = findUserByEmail(email);
+        User user = findUserByEmail(email);
 
         if(user == null) {
-            var password = generatePassword();
-            var newUser = User.builder()
+            String password = generatePassword();
+            User newUser = User.builder()
                     .firstname(firstname)
                     .lastname(lastname)
                     .email(email)
                     .password(passwordEncoder.encode(password))
-                    .role(Role.USER)
+                    .role(Role.ROLE_USER)
                     .build();
             userRepository.save(newUser);
             user = newUser;
@@ -116,7 +116,7 @@ public class UserService implements UserServiceInterface, UserDetailsService {
     }
 
     public void deleteUser(String email) throws UserNotFoundException {
-        var user = findUserByEmail(email);
+        User user = findUserByEmail(email);
         if (user == null) {
             throw new UserNotFoundException(USER_NOT_FOUND);
         }
@@ -125,12 +125,12 @@ public class UserService implements UserServiceInterface, UserDetailsService {
 
     @Override
     public void resetPassword(String email) throws EmailNotFoundException {
-        var user = findUserByEmail(email);
+        User user = findUserByEmail(email);
         if(user == null){
             throw new EmailNotFoundException(NO_USER_FOUND_BY_EMAIL + email);
         }
-        var password = generatePassword();
-        user.setPassword(encodePassword(password));
+        String password = generatePassword();
+        user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
         LOGGER.info("New password: " + password);
         //emailService.sendNewPasswordEmail(user.getFirstname(), password, user.getEmail());
@@ -138,13 +138,13 @@ public class UserService implements UserServiceInterface, UserDetailsService {
 
     @Override
     public void changePassword(String email, String newPassword) throws EmailNotFoundException{
-        var user = findUserByEmail(email);
+        User user = findUserByEmail(email);
 
         if(user == null){
             throw new EmailNotFoundException(NO_USER_FOUND_BY_EMAIL + email);
         }
 
-        user.setPassword(encodePassword(newPassword));
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         LOGGER.info("New password: " + newPassword);
     }
@@ -171,12 +171,12 @@ public class UserService implements UserServiceInterface, UserDetailsService {
     public User updateUser(String currentEmail, String newFirstname, String newLastname, String newEmail, String newHeight,
                            int newWeight, int newAge, String newActivityLevel, String newGoal, Role newRole) throws
             EmailNotFoundException {
-        var currentUser = findUserByEmail(currentEmail);
+        User currentUser = findUserByEmail(currentEmail);
         if(currentUser == null){
             throw new EmailNotFoundException(NO_USER_FOUND_BY_EMAIL + currentEmail);
         }
 
-        var updatedUser = User.builder()
+        User updatedUser = User.builder()
                 .firstname(newFirstname)
                 .lastname(newLastname)
                 .email(newEmail)
@@ -220,7 +220,7 @@ public class UserService implements UserServiceInterface, UserDetailsService {
         return userRepository.findUserByEmail(email);
     }
 
-    @Override
+    /*@Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         var user = userRepository.findUserByEmail(email);
         if(user == null){
@@ -231,15 +231,15 @@ public class UserService implements UserServiceInterface, UserDetailsService {
             LOGGER.info("Returning found user by email: " + email);
             return user;
         }
-    }
+    }*/
 
     /*private Role getRoleEnumName(String role) {
         return Role.valueOf(role.toUpperCase());
     }*/
 
-    private String encodePassword(String password) {
+    /*private String encodePassword(String password) {
         return passwordEncoder.encode(password);
-    }
+    }*/
 
     private String generatePassword() {
         return RandomStringUtils.randomAlphanumeric(10);
