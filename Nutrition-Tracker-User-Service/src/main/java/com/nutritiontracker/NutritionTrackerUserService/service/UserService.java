@@ -85,20 +85,20 @@ public class UserService implements UserServiceInterface {
 
         User user = findUserByEmail(email);
 
-        if(user == null) {
-            String password = generatePassword();
-            User newUser = User.builder()
-                    .firstname(firstname)
-                    .lastname(lastname)
-                    .email(email)
-                    .password(passwordEncoder.encode(password))
-                    .role(Role.ROLE_USER)
-                    .build();
-            userRepository.save(newUser);
-            user = newUser;
-        } else {
+        if(user != null) {
             throw new EmailExistException(EMAIL_ALREADY_EXISTS);
         }
+
+        String password = generatePassword();
+        User newUser = User.builder()
+                .firstname(firstname)
+                .lastname(lastname)
+                .email(email)
+                .password(passwordEncoder.encode(password))
+                .role(role)
+                .build();
+        userRepository.save(newUser);
+        user = newUser;
 
         /*User user = new User();
         String password = generatePassword();
@@ -111,6 +111,7 @@ public class UserService implements UserServiceInterface {
         userRepository.save(user);
         //emailService.sendNewPasswordEmail(firstname, password, email);
         LOGGER.info("Password is: " + password);*/
+
 
         return user;
     }

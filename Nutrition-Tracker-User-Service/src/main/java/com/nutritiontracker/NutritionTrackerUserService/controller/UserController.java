@@ -11,6 +11,8 @@ import com.nutritiontracker.NutritionTrackerUserService.model.HttpResponse;
 import com.nutritiontracker.NutritionTrackerUserService.model.RegisterRequest;
 import com.nutritiontracker.NutritionTrackerUserService.model.User;
 import com.nutritiontracker.NutritionTrackerUserService.service.UserServiceInterface;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -38,6 +40,7 @@ public class UserController extends ExceptionHandling {
     public static final String GENERIC_SUCCESS = "Action successful.";
     private UserServiceInterface userServiceInterface;
     private AuthenticationManager authenticationManager;
+    private Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     @Autowired
     public UserController(UserServiceInterface userServiceInterface, AuthenticationManager authenticationManager) {
@@ -55,36 +58,15 @@ public class UserController extends ExceptionHandling {
         return ResponseEntity.ok(userServiceInterface.authenticate(request));
     }
 
-    /*@PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody User user) throws UserNotFoundException, EmailExistException {
-        User newUser = userServiceInterface.register(user.getFirstname(), user.getLastname(), user.getEmail(),
-                user.getPassword());
-
-        return new ResponseEntity<>(newUser, OK);
-    }*/
-
     @PostMapping("/add")
     @PreAuthorize("hasAnyAuthority('user:create')")
     public ResponseEntity<User> addNewUser(@RequestParam("firstname") String firstname,
                                            @RequestParam("lastname") String lastname,
                                            @RequestParam("email") String email,
-                                           @RequestParam("role") Role role) throws UserNotFoundException, EmailExistException,
-            MessagingException {
-        User newUser = userServiceInterface.addNewUser(firstname, lastname, email, role);
-
-        return new ResponseEntity<>(newUser, OK);
+                                           @RequestParam("role") Role role) throws EmailExistException {
+        LOGGER.info("hey");
+        return ResponseEntity.ok(userServiceInterface.addNewUser(firstname, lastname, email, role));
     }
-
-    /*@PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody User user) throws UserNotFoundException, EmailExistException {
-
-        authenticate(user.getEmail(), user.getPassword());
-        User loginUser = userServiceInterface.findUserByEmail(user.getEmail());
-        UserPrincipal userPrincipal = new UserPrincipal(loginUser);
-        HttpHeaders jwtHeader = getJWTHeader(userPrincipal);
-
-        return new ResponseEntity<>(loginUser, jwtHeader, OK);
-    }*/
 
     @PutMapping("/update")
     public ResponseEntity<User> updateUser(@RequestParam("currentEmail") String currentEmail,

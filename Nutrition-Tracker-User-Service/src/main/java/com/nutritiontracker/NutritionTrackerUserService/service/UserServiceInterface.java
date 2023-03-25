@@ -19,8 +19,7 @@ public interface UserServiceInterface {
     List<User> getAllUsers();
     User findUserByEmail(String email);
     User findUserById(Long id);
-    User addNewUser(String firstname, String lastname, String email, Role role) throws UserNotFoundException, EmailExistException,
-            MessagingException;
+    User addNewUser(String firstname, String lastname, String email, Role role) throws EmailExistException;
     User updateUser(String currentEmail, String newFirstname, String newLastname, String newEmail, String newHeight,
                     int newWeight, int newAge, String newActivityLevel, String newGoal, Role newRole)
             throws EmailNotFoundException;

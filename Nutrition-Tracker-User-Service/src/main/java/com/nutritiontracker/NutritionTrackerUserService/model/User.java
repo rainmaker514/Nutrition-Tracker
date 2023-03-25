@@ -35,14 +35,14 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
     private int startingWeight;
-    @OneToMany(mappedBy = "users")
-    private List<Entry> entries;
+//    @OneToMany(mappedBy = "users")
+//    private List<Entry> entries;
 
     public User(){}
 
     //user constructor
     public User(Long id, String firstname, String lastname, String email, String password, String height, int weight, int age,
-                String activityLevel, String goal, Role role, int startingWeight, List<Entry> entries) {
+                String activityLevel, String goal, Role role, int startingWeight) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -55,7 +55,6 @@ public class User implements UserDetails {
         this.goal = goal;
         this.role = role;
         this.startingWeight = startingWeight;
-        this.entries = entries;
     }
 
     @Override
@@ -63,7 +62,7 @@ public class User implements UserDetails {
         return "User{ " + this.id + " firstname = " + this.firstname + ", lastname = " + this.lastname +
                 ", email = " + this.email + ", password = " + this.password + ", height = " + this.height +
                 ", weight = " + this.weight + ", age = " + this.age + ", activity level = " + this.activityLevel +
-                ", goal = " + this.goal + ", entries = " + this.entries + "}";
+                ", goal = " + this.goal +" }";
     }
 
     //getters and setters
@@ -128,10 +127,10 @@ public class User implements UserDetails {
     }
     public int getStartingWeight() { return startingWeight; }
     public void setStartingWeight(int startingWeight) { this.startingWeight = startingWeight; }
-    public void setEntries(List<Entry> entries) {
-        this.entries = entries;
-    }
-    public List<Entry> getEntries() {
-        return entries;
-    }
+//    public void setEntries(List<Entry> entries) {
+//        this.entries = entries;
+//    }
+//    public List<Entry> getEntries() {
+//        return entries;
+//    }
 }
