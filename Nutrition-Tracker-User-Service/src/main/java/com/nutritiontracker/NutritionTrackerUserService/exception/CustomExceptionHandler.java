@@ -17,37 +17,42 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jakarta.persistence.NoResultException;
+
 import java.util.Objects;
 
 import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
-
-public class ExceptionHandling {
+public class CustomExceptionHandler {
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
     public static final String METHOD_IS_NOT_ALLOWED = "This request method is not allowed on this endpoint. Please send a '%s' request.";
     public static final String INTERNAL_SERVER_ERROR_MSG = "An error has occurred while processing the request.";
     public static final String INCORRECT_CREDENTIALS = "Email / password incorrect. Please try again.";
     public static final String NOT_ENOUGH_PERMISSION = "You don't have enough permission.";
+    public static final String EMAIL_ALREADY_EXISTS = "Email already exists.";
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<HttpResponse> badCredentialsException(){
+        LOGGER.error(INCORRECT_CREDENTIALS);
         return createHttpResponse(BAD_REQUEST, INCORRECT_CREDENTIALS);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<HttpResponse> accessDeniedException(){
+        LOGGER.error(NOT_ENOUGH_PERMISSION);
         return createHttpResponse(FORBIDDEN, NOT_ENOUGH_PERMISSION);
     }
 
     @ExceptionHandler(TokenExpiredException.class)
     public ResponseEntity<HttpResponse> tokenExpiredException(TokenExpiredException exception){
+        LOGGER.error(exception.getMessage());
         return createHttpResponse(UNAUTHORIZED, exception.getMessage());
     }
 
     @ExceptionHandler(EmailExistException.class)
-    public ResponseEntity<HttpResponse> emailExistException(EmailExistException exception){
-        return createHttpResponse(BAD_REQUEST, exception.getMessage());
+    public ResponseEntity<HttpResponse> emailExistException(){
+        LOGGER.error(EMAIL_ALREADY_EXISTS);
+        return createHttpResponse(BAD_REQUEST, EMAIL_ALREADY_EXISTS);
     }
 
     @ExceptionHandler(EmailNotFoundException.class)

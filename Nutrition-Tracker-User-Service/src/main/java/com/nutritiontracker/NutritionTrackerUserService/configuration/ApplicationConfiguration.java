@@ -59,7 +59,6 @@ public class ApplicationConfiguration {
                 }else{
 
                     LOGGER.info("Returning found user by email: " + username);
-                    System.out.printf(String.valueOf(user));
                     return user;
                 }
             }

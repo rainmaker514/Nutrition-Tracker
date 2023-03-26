@@ -2,6 +2,7 @@ package com.nutritiontracker.NutritionTrackerUserService.service;
 
 import com.nutritiontracker.NutritionTrackerUserService.authentication.JWTService;
 import com.nutritiontracker.NutritionTrackerUserService.enumeration.Role;
+import com.nutritiontracker.NutritionTrackerUserService.exception.CustomExceptionHandler;
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.EmailExistException;
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.EmailNotFoundException;
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.UserNotFoundException;
@@ -26,12 +27,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
-import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
 
+import static com.nutritiontracker.NutritionTrackerUserService.exception.CustomExceptionHandler.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 @RequiredArgsConstructor
@@ -40,7 +40,6 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 @Transactional
 @Qualifier("userDetailsService")
 public class UserService implements UserServiceInterface {
-    public static final String EMAIL_ALREADY_EXISTS = "Email already exists.";
     public static final String NO_USER_FOUND_BY_EMAIL = "No user found by email: ";
     public static final String USER_NOT_FOUND = "User not found.";
     private final UserRepository userRepository;
@@ -52,8 +51,13 @@ public class UserService implements UserServiceInterface {
     //private EmailService emailService;
 
     @Override
-    public AuthenticationResponse register(RegisterRequest request) {
-        User user = User.builder()
+    public AuthenticationResponse register(RegisterRequest request) throws EmailExistException {
+        User user = findUserByEmail(request.getEmail());
+
+        if(user != null) {
+            throw new EmailExistException(EMAIL_ALREADY_EXISTS);
+        }
+        user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
                 .email(request.getEmail())
@@ -72,8 +76,11 @@ public class UserService implements UserServiceInterface {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
                 request.getPassword()));
-        UserDetails user = userDetailsService.loadUserByUsername(request.getEmail());
-        String jwtToken = jwtService.generateToken(user);
+        var user = userRepository.findUserByEmail(request.getEmail());
+        if(user == null) {
+
+        }
+        var jwtToken = jwtService.generateToken(user);
 
         return AuthenticationResponse.builder()
                 .token(jwtToken)

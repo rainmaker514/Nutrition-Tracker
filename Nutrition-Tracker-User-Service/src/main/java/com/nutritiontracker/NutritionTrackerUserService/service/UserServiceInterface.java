@@ -13,7 +13,7 @@ import jakarta.mail.MessagingException;
 import java.util.List;
 
 public interface UserServiceInterface {
-    AuthenticationResponse register(RegisterRequest request);
+    AuthenticationResponse register(RegisterRequest request) throws EmailExistException;
     AuthenticationResponse authenticate(AuthenticationRequest request);
     //User register(String firstname, String lastname, String email, String password) throws UserNotFoundException, EmailExistException;
     List<User> getAllUsers();

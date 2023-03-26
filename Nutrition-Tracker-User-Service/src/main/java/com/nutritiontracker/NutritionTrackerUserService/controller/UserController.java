@@ -1,7 +1,7 @@
 package com.nutritiontracker.NutritionTrackerUserService.controller;
 
 import com.nutritiontracker.NutritionTrackerUserService.enumeration.Role;
-import com.nutritiontracker.NutritionTrackerUserService.exception.ExceptionHandling;
+import com.nutritiontracker.NutritionTrackerUserService.exception.CustomExceptionHandler;
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.EmailExistException;
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.EmailNotFoundException;
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.UserNotFoundException;
@@ -32,7 +32,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/users")
 @CrossOrigin(origins = "http://localhost:4200")
-public class UserController extends ExceptionHandling {
+public class UserController extends CustomExceptionHandler {
 
     public static final String EMAIL_SENT = "An email with a new password was sent to: ";
     public static final String USER_DELETED = "User deleted!";
@@ -49,7 +49,7 @@ public class UserController extends ExceptionHandling {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) throws EmailExistException {
         return ResponseEntity.ok(userServiceInterface.register(request));
     }
 
