@@ -77,9 +77,6 @@ public class UserService implements UserServiceInterface {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
                 request.getPassword()));
         var user = userRepository.findUserByEmail(request.getEmail());
-        if(user == null) {
-
-        }
         var jwtToken = jwtService.generateToken(user);
 
         return AuthenticationResponse.builder()

@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -58,13 +60,14 @@ public class UserController extends CustomExceptionHandler {
         return ResponseEntity.ok(userServiceInterface.authenticate(request));
     }
 
+
     @PostMapping("/add")
-    @PreAuthorize("hasAnyAuthority('user:create')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<User> addNewUser(@RequestParam("firstname") String firstname,
                                            @RequestParam("lastname") String lastname,
                                            @RequestParam("email") String email,
                                            @RequestParam("role") Role role) throws EmailExistException {
-        LOGGER.info("hey");
+
         return ResponseEntity.ok(userServiceInterface.addNewUser(firstname, lastname, email, role));
     }
 

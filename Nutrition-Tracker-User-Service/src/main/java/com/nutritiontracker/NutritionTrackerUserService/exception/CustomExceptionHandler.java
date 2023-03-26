@@ -28,7 +28,7 @@ public class CustomExceptionHandler {
     public static final String METHOD_IS_NOT_ALLOWED = "This request method is not allowed on this endpoint. Please send a '%s' request.";
     public static final String INTERNAL_SERVER_ERROR_MSG = "An error has occurred while processing the request.";
     public static final String INCORRECT_CREDENTIALS = "Email / password incorrect. Please try again.";
-    public static final String NOT_ENOUGH_PERMISSION = "You don't have enough permission.";
+    public static final String NO_PERMISSION = "You don't have the permission to perform this action.";
     public static final String EMAIL_ALREADY_EXISTS = "Email already exists.";
 
     @ExceptionHandler(BadCredentialsException.class)
@@ -39,8 +39,8 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<HttpResponse> accessDeniedException(){
-        LOGGER.error(NOT_ENOUGH_PERMISSION);
-        return createHttpResponse(FORBIDDEN, NOT_ENOUGH_PERMISSION);
+        LOGGER.error(NO_PERMISSION);
+        return createHttpResponse(FORBIDDEN, NO_PERMISSION);
     }
 
     @ExceptionHandler(TokenExpiredException.class)
