@@ -1,14 +1,17 @@
 package com.nutritiontracker.NutritionTrackerUserService.exception;
 
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.EmailExistException;
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.EmailNotFoundException;
 import com.nutritiontracker.NutritionTrackerUserService.exception.domain.UserNotFoundException;
 import com.nutritiontracker.NutritionTrackerUserService.model.HttpResponse;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,11 +21,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jakarta.persistence.NoResultException;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class CustomExceptionHandler {
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
     public static final String METHOD_IS_NOT_ALLOWED = "This request method is not allowed on this endpoint. Please send a '%s' request.";
@@ -30,6 +37,7 @@ public class CustomExceptionHandler {
     public static final String INCORRECT_CREDENTIALS = "Email / password incorrect. Please try again.";
     public static final String NO_PERMISSION = "You don't have the permission to perform this action.";
     public static final String EMAIL_ALREADY_EXISTS = "Email already exists.";
+    public static final String TOKEN_EXPIRED = "This session has expired, please log in again.";
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<HttpResponse> badCredentialsException(){
@@ -43,11 +51,11 @@ public class CustomExceptionHandler {
         return createHttpResponse(FORBIDDEN, NO_PERMISSION);
     }
 
-    @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<HttpResponse> tokenExpiredException(TokenExpiredException exception){
-        LOGGER.error(exception.getMessage());
-        return createHttpResponse(UNAUTHORIZED, exception.getMessage());
-    }
+//    @ExceptionHandler(ExpiredJwtException.class)
+//    public ResponseEntity<HttpResponse> tokenExpiredException(){
+//        LOGGER.error(TOKEN_EXPIRED);
+//        return createHttpResponse(UNAUTHORIZED, TOKEN_EXPIRED);
+//    }come back to this
 
     @ExceptionHandler(EmailExistException.class)
     public ResponseEntity<HttpResponse> emailExistException(){
@@ -84,7 +92,6 @@ public class CustomExceptionHandler {
     }
 
     private ResponseEntity<HttpResponse> createHttpResponse(HttpStatus httpStatus, String message){
-
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
                 message.toUpperCase()), httpStatus);
     }

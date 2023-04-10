@@ -76,6 +76,7 @@ public class UserService implements UserServiceInterface {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
                 request.getPassword()));
+
         var user = userRepository.findUserByEmail(request.getEmail());
         var jwtToken = jwtService.generateToken(user);
 
@@ -118,6 +119,38 @@ public class UserService implements UserServiceInterface {
 
 
         return user;
+    }
+
+    @Override
+    public User updateUser(String currentEmail, String newFirstname, String newLastname, String newEmail, String newHeight,
+                           int newWeight, int newAge, String newActivityLevel, String newGoal, Role newRole) throws
+            EmailNotFoundException, UserNotFoundException, EmailExistException {
+        User currentUser = findUserByEmail(currentEmail);
+        if(currentUser == null){
+            throw new EmailNotFoundException(NO_USER_FOUND_BY_EMAIL + currentEmail);
+        }
+
+        currentUser = validateNewEmail(currentEmail, newEmail);
+        currentUser.setFirstname(newFirstname);
+        currentUser.setLastname(newLastname);
+        currentUser.setEmail(newEmail);
+        currentUser.setHeight(newHeight);
+        currentUser.setWeight(newWeight);
+        currentUser.setAge(newAge);
+        currentUser.setActivityLevel(newActivityLevel);
+        currentUser.setGoal(newGoal);
+        currentUser.setRole(newRole);
+        //currentUser.setAuthorities(getRoleEnumName(role).getAuthorities());
+        userRepository.save(currentUser);
+
+        String jwtToken = jwtService.generateToken(currentUser);
+        AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();
+
+        LOGGER.info("Token: " + jwtToken);
+
+        return currentUser;
     }
 
     public void deleteUser(String email) throws UserNotFoundException {
@@ -173,44 +206,6 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
-    public User updateUser(String currentEmail, String newFirstname, String newLastname, String newEmail, String newHeight,
-                           int newWeight, int newAge, String newActivityLevel, String newGoal, Role newRole) throws
-            EmailNotFoundException {
-        User currentUser = findUserByEmail(currentEmail);
-        if(currentUser == null){
-            throw new EmailNotFoundException(NO_USER_FOUND_BY_EMAIL + currentEmail);
-        }
-
-        User updatedUser = User.builder()
-                .firstname(newFirstname)
-                .lastname(newLastname)
-                .email(newEmail)
-                .height(newHeight)
-                .weight(newWeight)
-                .age(newAge)
-                .activityLevel(newActivityLevel)
-                .goal(newGoal)
-                .role(newRole)
-                .build();
-
-        userRepository.save(updatedUser);
-        /*User currentUser = validateNewEmail(currentEmail, newEmail);
-        currentUser.setFirstname(newFirstname);
-        currentUser.setLastname(newLastname);
-        currentUser.setEmail(newEmail);
-        currentUser.setHeight(newHeight);
-        currentUser.setWeight(newWeight);
-        currentUser.setAge(newAge);
-        currentUser.setActivityLevel(newActivityLevel);
-        currentUser.setGoal(newGoal);
-        currentUser.setRole(getRoleEnumName(role).name());
-        currentUser.setAuthorities(getRoleEnumName(role).getAuthorities());
-        userRepository.save(currentUser);*/
-
-        return updatedUser;
-    }
-
-    @Override
     public User findUserById(Long id){
         return userRepository.findUserById(id);
     }
@@ -250,7 +245,7 @@ public class UserService implements UserServiceInterface {
         return RandomStringUtils.randomAlphanumeric(10);
     }
 
-    /*private User validateNewEmail(String currentUserEmail, String newEmail) throws EmailExistException, UserNotFoundException {
+    private User validateNewEmail(String currentUserEmail, String newEmail) throws EmailExistException, UserNotFoundException {
         User userByNewEmail = findUserByEmail(newEmail);
 
         if(StringUtils.isNotBlank(currentUserEmail)){
@@ -272,5 +267,5 @@ public class UserService implements UserServiceInterface {
             }
             return null;
         }
-    }*/
+    }
 }

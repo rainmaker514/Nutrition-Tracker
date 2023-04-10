@@ -1,7 +1,6 @@
 package com.nutritiontracker.NutritionTrackerUserService.authentication;
 
 import com.nutritiontracker.NutritionTrackerUserService.repository.UserRepository;
-import com.nutritiontracker.NutritionTrackerUserService.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,6 +39,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring(7);
+
         userEmail = jwtService.extractUserEmail(jwt);
 
         if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
@@ -51,6 +51,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
+
         filterChain.doFilter(request, response);
     }
 }

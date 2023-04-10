@@ -81,12 +81,11 @@ public class UserController extends CustomExceptionHandler {
                                            @RequestParam("age") int age,
                                            @RequestParam("activityLevel") String activityLevel,
                                            @RequestParam("goal") String goal,
-                                           @RequestParam("role") Role role) throws EmailNotFoundException {
+                                           @RequestParam("role") Role role) throws EmailNotFoundException, UserNotFoundException, EmailExistException {
 
-        User updatedUser = userServiceInterface.updateUser (currentEmail, firstname, lastname, email, height, weight, age,
-                activityLevel, goal, role);
 
-        return new ResponseEntity<>(updatedUser, OK);
+        return ResponseEntity.ok(userServiceInterface.updateUser(currentEmail, firstname, lastname, email, height, weight, age,
+                activityLevel, goal, role));
     }
 
     @PutMapping("/change-password")
